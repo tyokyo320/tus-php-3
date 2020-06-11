@@ -1,0 +1,40 @@
+[
+    {
+        "id": 0,
+        "question": "This phone book isn't ____. Don't you have a more recent one?",
+        "choices": [
+          "from now on", "in fashion", "on time", "up to date"
+        ],
+        "correct": 4, "a": 0.416, "b": 1.236
+    },{
+        "id": 1,
+        "question": "People who visit the museum are ____ not to touch any of the paintings.",
+        "choices": [
+          "hoped", "noted", "wanted", "asked"
+        ],
+        "correct": 4, "a": 0.549, "b": 0.059
+    },{
+        "id": 2,
+        "question": "Look! There are ____ number of birds in the tree.<br> Do you know what ____ number is?",
+        "choices": [
+          "a ; a", "the ; the", "the ; a", "a ; the"
+        ],
+        "correct": 4, "a": 1.335, "b": -0.790
+    },{
+        "id": 3,
+        "question": "The doctor suggested that I ____ this medicine twice a day.",
+        "choices": [
+          "take", "to take", "taking", "be token"
+        ],
+        "correct": 1, "a": 0.509, "b": -0.353
+    },{
+        "id": 4,
+        "question": "I think I did well on the English listening test. I understood ____ on the tape.",
+        "choices": [
+          "even anything", "almost everything", "only nothing", "probably something"
+        ],
+        "correct": 2, "a": 0.780, "b": -0.583
+    }
+    
+
+]

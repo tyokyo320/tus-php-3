@@ -17,6 +17,9 @@ $item = main();
 
 <body>
 <form method="post">
+    <span><?php
+    echo "問題". questions_number()
+    ?></span>
     <div id="question"></div>
     <div id="choices"></div>
     <button id="answer" type="submit">解答</button>
@@ -24,3 +27,4 @@ $item = main();
 </body>
 
 </html>
+

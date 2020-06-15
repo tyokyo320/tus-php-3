@@ -9,11 +9,16 @@ function kaitouSeisei(item){
     // HTMLの選択肢領域 (choice_area) に選択肢要素を追加
     for (let c = 0; c < choices.length; c++) {
         choice_area.appendChild(sentakushi(c, choices[c]));
+        // let e = sentakushi(c, choices[c]);
+        // console.log(c, e);
+        // choice_area.appendChild(e);
     }
 }
 
 function sentakushi(c, choice){
     let input = document.createElement("input");
+    input.required = true;
+    input.checked = c === 0;
     input.type = "radio";
     input.name = "choices";
     input.value = c + 1;

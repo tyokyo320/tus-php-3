@@ -61,6 +61,7 @@ function owari(){
     echo "<h1>試験が終了です</h1>";
     echo "<h1>あなたの能力値は" . $_SESSION["IR"]["T"] . "です</h1>";
 
+    // 解答欄にアルファベット表示に変更
     $convert = array(
         1 => "A",
         2 => "B",
@@ -68,6 +69,7 @@ function owari(){
         4 => "D",
     );
 
+    // 表のheader
     $content_table =<<< CONTENT_TABLE
     <style> 
         .table-1 {
@@ -85,8 +87,9 @@ function owari(){
         </tr>
     CONTENT_TABLE;
     echo $content_table;
-
+    
     foreach ($_SESSION["IR"]["H"] as $key => $value) {
+        // 表のbody
         $content_body =<<< CONTENT_BODY
         <tr>
             <td>$key</td>
@@ -114,7 +117,7 @@ function main(){
     }
 
     if ($item === false || $_SESSION["IR"]["N"] >= 5) {
-         owari();
+        owari();
     }
                                                                                                                                                                                                                                                                                                                                                                                                    
     return $item;

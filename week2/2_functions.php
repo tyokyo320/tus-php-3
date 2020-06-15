@@ -26,13 +26,32 @@ function kaishi(){
         // 能力値
         "T" => 0,
         // 問題履歴
-        "H" => []
+        "H" => [],
+        // 自信度履歴
+        "Q" => [],
+        // 時間
+        "time" => []
     );
     return questions(0);
 }
 
+// info.php開始時の処理
+function kaishi1(){
+    // init
+    $_SESSION["INFO"] = array(
+        // 冒頭問題
+        "info_question" => [],
+        // 冒頭履歴
+        "info_answer" => []
+    );
+}
+
 // テスト接続時の処理
 function keizoku($choice){
+    // 自信度調査
+    $questionnaire = $_POST["questionnaire"];
+    // 自信度記録
+    $_SESSION["IR"]["Q"][] = $questionnaire;
     // 获取当前正在回答的问题号
     $i = $_SESSION["IR"]["I"][$_SESSION["IR"]["N"]];
     // 获取当前问题
@@ -49,7 +68,21 @@ function keizoku($choice){
     $item = questions($i + 1);
     // 记录答题id
     $_SESSION["IR"]["I"][] = $item["id"];
+    // 解答時間を記録する
+    if (strlen($_POST["timer"]) == 0) {
+        $_SESSION["IR"]["time"][] = '00:00:01';        
+    } else {
+        $_SESSION["IR"]["time"][] = $_POST["timer"];
+    }
     return $item;
+}
+
+// info.phpで使う
+function keizoku1(){
+    $_SESSION["INFO"]["info_question"][] = $_POST["info_question1"];
+    $_SESSION["INFO"]["info_question"][] = $_POST["info_question2"];
+    $_SESSION["INFO"]["info_answer"][] = $_POST["info_answer1"];
+    $_SESSION["INFO"]["info_answer"][] = $_POST["info_answer2"];
 }
 
 function questions_number(){
@@ -58,8 +91,21 @@ function questions_number(){
 
 // テスト終了時の処理
 function owari(){
+    echo "<body>";
+    $body =<<< BODY
+    <style>
+        body{
+            background-image: url('https://blog.tyokyo320.com/images/background.png');
+            background-size: cover;
+            text-align: center;
+            padding: 200px;
+        }
+    </style>
+    BODY;
+    echo $body;
     echo "<h1>試験が終了です</h1>";
     echo "<h1>あなたの能力値は" . $_SESSION["IR"]["T"] . "です</h1>";
+    echo "<h1>あなたの誤謬率は" . (1 - $_SESSION["IR"]["T"]) . "です</h1>";
 
     // 解答欄にアルファベット表示に変更
     $convert = array(
@@ -67,6 +113,15 @@ function owari(){
         2 => "B",
         3 => "C",
         4 => "D",
+        "分からない" => "分からない"
+    );
+
+    // 自信度欄にアルファベット表示に変更
+    $convert_questionnaire = array(
+        1 => "自信なし",
+        2 => "やや自信なし",
+        3 => "やや自信あり",
+        4 => "自信あり",
     );
 
     // 表のheader
@@ -74,33 +129,86 @@ function owari(){
     <style> 
         .table-1 {
             width: 500px;
+            margin: 0 auto;
             background: #acb6e5;  /* fallback for old browsers */
             background: -webkit-linear-gradient(to right, #86fde8, #acb6e5);  /* Chrome 10-25, Safari 5.1-6 */
             background: linear-gradient(to right, #86fde8, #acb6e5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */;
         }
+        td {
+            text-align:center;
+        }
     </style>
     <div class="table-1">
-    <table border="1"， width="500">
+    <table border="1" width="500">
         <tr>
             <th>ID</th>
             <th>解答</th>
+            <th>自信度</th>
+            <th>解答時間</th>
         </tr>
     CONTENT_TABLE;
     echo $content_table;
-    
-    foreach ($_SESSION["IR"]["H"] as $key => $value) {
-        // 表のbody
+
+    for ($i = 0; $i < count($_SESSION["IR"]["H"]); $i++) {
+        $value = $_SESSION["IR"]["H"][$i];
+        $questionnaire_value = $_SESSION["IR"]["Q"][$i];
+        $time = $_SESSION["IR"]["time"];
+
         $content_body =<<< CONTENT_BODY
         <tr>
-            <td>$key</td>
+            <td>$i</td>
             <td>$convert[$value]</td>
+            <td>$convert_questionnaire[$questionnaire_value]</td>
+            <td>$time[$i]</td>
         </tr>
         CONTENT_BODY;
         echo $content_body;
     }
-        
-    // var_dump($_SESSION["IR"]["H"]);
+    echo "</table>";
+    echo "</div>";
+
+    $info_table =<<< INFO_TABLE
+    <style> 
+        .table-2 {
+            width: 500px;
+            margin: 0 auto;
+            margin-top: 2cm;
+            background: #83a4d4;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #b6fbff, #83a4d4);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #b6fbff, #83a4d4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */;
+        }
+        td {
+            text-align:center;
+        }
+    </style>
+    <div class="table-2">
+    <table border="1"， width="500">
+        <tr>
+            <th>冒頭の自信度問題</th>
+            <th>解答</th>
+        </tr>
+    INFO_TABLE;
+    echo $info_table;
+
+    for ($i = 0; $i < count($_SESSION["INFO"]["info_question"]); $i++) { 
+        $info_question = $_SESSION["INFO"]["info_question"][$i];
+        $info_answer = $_SESSION["INFO"]["info_answer"][$i];
+
+        $info_body =<<< INFO_BODY
+        <tr>
+            <td>$info_question</td>
+            <td>$convert_questionnaire[$info_answer]</td>
+        </tr>
+        INFO_BODY;
+        echo $info_body;
+    }
+    echo "</table>";
+    echo "</div>";
+    echo "</body>";
+
+
     unset($_SESSION["IR"]);
+    unset($_SESSION["INFO"]);
     exit;
 }
 
@@ -120,9 +228,13 @@ function main(){
         owari();
     }
                                                                                                                                                                                                                                                                                                                                                                                                    
+    if (isset($_SESSION["INFO"]) && isset($_POST["info_answer1"]) && isset($_POST["info_answer2"])) {
+        keizoku1();
+    }
+
     return $item;
 }
 
-
-// var_dump(questions(0));
-// var_dump(main());
+function info_main(){
+    kaishi1();
+}

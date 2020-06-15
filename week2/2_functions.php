@@ -5,8 +5,7 @@ session_start();
 
 function questions($i)
 {
-    $content = file_get_contents("ItemBank.json");
-    $itemBank = json_decode($content, true);
+    $itemBank = json_decode(file_get_contents("ItemBank.json"), true);
     if (isset($itemBank[$i])) {
         return $itemBank[$i];
     } else {
@@ -45,8 +44,8 @@ function keizoku($choice){
 
 // テスト終了時の処理
 function owari(){
-    echo "試験が終了です. ";
-    echo "あなたの能力値は" . $_SESSION["IR"]["T"] . "です";
+    echo "<h1>試験が終了です</h1>";
+    echo "<h1>あなたの能力値は" . $_SESSION["IR"]["T"] . "です</h1>";
     unset($_SESSION["IR"]);
     exit;
 }

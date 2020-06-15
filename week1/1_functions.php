@@ -63,6 +63,28 @@ function bayes($x, $itemBank, $start, $end, $step){
     return $dist;
 }
 
+// kadai2 bayes
+function naive_bayes($x, $itemBank, $start, $end, $step){
+    $n = count($x);
+    $thetaDist = range($start, $end, $step);
+    $length = count($thetaDist);
+
+    $dist = seikiBunpu($start, $end, $step);
+    for ($i = 0; $i < $n; $i++) {
+        $item = $itemBank[$i];
+        $yuudoDist = icc($x[$i], $item["a"], $item["b"], $start, $end, $step);
+        for ($t = 0; $t < $length; $t++) {
+            $dist[$t] += log($yuudoDist[$t]);
+        }
+    }
+    // 周辺尤度の計算
+    $shuhen = array_sum($dist);
+    for ($t = 0; $t < $length; $t++) {
+        $dist[$t] -= $shuhen;
+    }
+    return $dist;
+}
+
 // 配列の最大値の添字
 function argmax($v){
     return array_search(max($v), $v);
@@ -75,6 +97,15 @@ function estimation($x, $itemBank, $start, $end, $step){
     $theta = $thetaDist[argmax($probability)];
     return $theta;
 }
+
+// kadai2 estimation
+function estimation_new($x, $itemBank, $start, $end, $step){
+    $probability = naive_bayes($x, $itemBank, $start, $end, $step);
+    $thetaDist = range($start, $end, $step);
+    $theta = $thetaDist[argmax($probability)];
+    return $theta;
+}
+
 
 // 項目情報量
 function information($theta, $itemBank){
@@ -102,7 +133,9 @@ function simulation($N, $J){
 
     $examinee = [];
     for ($j = 0; $j < $J; $j++)
-        $examinee[] = rand(-300, 300) / 100;
+        // $examinee[] = rand(-300, 300) / 100;
+        // kadai3
+        $examinee[] = cauchy(3);
 
     $error = [];
     foreach ($examinee as $theta) {
@@ -110,13 +143,50 @@ function simulation($N, $J){
         foreach ($itemBank as $test)
             $x[] = seitouKakuritsu($theta, $test["a"], $test["b"]) > rand(0, 100) / 100 ? 1 : 0;
         $error[] = abs($theta - estimation($x, $itemBank, -3, 3, 0.1));
+        // kadai2
+        // $error[] = abs($theta - estimation_new($x, $itemBank, -3, 3, 0.1));
     }
     return array_sum($error) / count($examinee);
 }
 
-print("平均誤差:" . simulation(50, 100));
+function kadai1(){
+    $f = fopen("kadai1.txt", "w");
+    /*
+    for ($i = 0; $i < 10; $i++) { 
+        $N = 10 + $i * 10;
+        // print("平均誤差:" . simulation($N, 100) . "\n");
+        fwrite($f, simulation($N, 100) . "\n");
+    }
+    */
+    for ($i = 0; $i < 10; $i++) { 
+        $J = 10 + $i * 10;
+        // print("平均誤差:" . simulation(100, $J) . "\n");
+        fwrite($f, simulation(100, $J) . "\n");
+    }
+    fclose($f);
+}
 
-// practice1();
+function kadai2(){
+    for ($i = 0; $i < 10; $i++) { 
+        print("平均誤差:" . simulation(50, 100) . "\n");
+    }
+}
+
+function cauchy($eta){
+    return $eta * tan((rand(0, 99) / 100) - 0.5);
+}
+
+function kadai3(){
+    $f = fopen("kadai3.txt", "w");
+    for ($i = 0; $i < 10; $i++) { 
+        $N = 10 + $i * 10;
+        // print("平均誤差:" . simulation($N, 100) . "\n");
+        fwrite($f, simulation($N, 100) . "\n");
+    }
+
+    fclose($f);
+}
+
 // var_dump(practice1());
 // var_dump(seikiBunpu(-3, 3, 1));
 
@@ -127,3 +197,7 @@ print("平均誤差:" . simulation(50, 100));
 // var_dump(estimation([1], [array("a" => 1, "b" => 0)], -2, 2, 1));
 
 // var_dump(information(0, [array("a" => 1, "b" => 0)]));
+
+// kadai1();
+// kadai2();
+kadai3();

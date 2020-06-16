@@ -70,13 +70,25 @@ $item = main();
         }
 
 
+        #page-center {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
         body{
             background-image: url('https://blog.tyokyo320.com/images/background.png');
             background-size: cover;
-            text-align: center;
-            padding: 200px;
+            padding-top: 200px;
+       
         }
 
+        p {
+            font-size: 35px;
+            font-weight: 900;
+        }
 
     </style>
     <script type="text/javascript">
@@ -123,7 +135,7 @@ $item = main();
 </head>
 
 <body>
-    <div style="width:100%; text-align:center">
+    <div id="page-center">
         <form method="post">
             <span class="index"><?php
             echo "問題". questions_number()

@@ -31,31 +31,26 @@ info_main();
             transform: translateY(4px); 
         }
 
-        .index {
-            padding: 20px;
-        }
-
-        .question {
-            padding: 20px;
-        }
-
-        .choices {
-            padding: 20px;
-        }
-
         .questionnaire {
             padding: 20px;
+            font-size: 25px;
+            vertical-align: middle;
+            margin: 0px;
         }
 
-        .panel-default {
-            padding: 20px;
+        #page-center {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
         }
 
         body{
             background-image: url('https://blog.tyokyo320.com/images/background.png');
             background-size: cover;
-            text-align: center;
-            padding: 200px;
+            padding-top: 200px;
+       
         }
 
         p {
@@ -63,11 +58,13 @@ info_main();
             font-weight: 900;
         }
 
+        
+
     </style>
 </head>
 
 <body>
-    <div style="width:100%; text-align:center">
+    <div id="page-center">
         <form action="2_index.php" method="post">
             <p name="info_question1">「英語」に対する自信度は？</p>
             <input style="display: none;" type="text" name="info_question1"" value="「英語」に対する自信度は？">
